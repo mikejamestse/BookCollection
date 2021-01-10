@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<title>Ajax Demo</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<script>
+			function loadText() {
+				var xhttp = new XMLHttpRequest();
+				
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						document.getElementById('clickMe').innerHTML = this.responseText;
+					}
+				};
+				
+				xhttp.open('GET', 'ajax_info.txt', true);
+				xhttp.send();
+			}
+			
+			function showCollection() {
+				var xhttp = new XMLHttpRequest();
+				var xmlDoc;
+				var txt;
+				var authors;
+				var div
+				var table = "<tr><th>Author</th>" +
+							"<th>Title</th>" + 
+							"<th>Genre</th>" + 
+							"<th>Description</th></tr>"
+				
+				// Display the table tag
+				document.getElementById('collection').style.display = 'block';
+				
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						xmlDoc = this.responseXML;
+						txt = "";
+						collection = xmlDoc.getElementsByTagName('book');
+						
+						for (var i = 0; i < collection.length; i++) {
+							table += "<tr><td>" +
+							collection[i].getElementsByTagName('author')[0].childNodes[0].nodeValue + "</td><td>" +
+							collection[i].getElementsByTagName('title')[0].childNodes[0].nodeValue + "</td><td>" +
+							collection[i].getElementsByTagName('genre')[0].childNodes[0].nodeValue + "</td><td>" +
+							collection[i].getElementsByTagName('description')[0].childNodes[0].nodeValue + "</td></tr>"
+						}
+					
+						document.getElementById('collection').innerHTML = table;
+						
+						
+
+					}
+				};
+				
+				xhttp.open('GET', 'books.xml', true)
+				xhttp.send()
+			}
+			
+			function hideCollection() {
+				var div = document.getElementById('collection');
+					
+				if (div.style.display !== 'none') {
+					div.style.display = 'none';
+				} 
+			}
+			
+			
+		</script>
+		<div class='container'>
+			<h3 style='margin-top: 15px'>My book collection demo</h3>
+			<hr>
+			<div style='background: #20b2aa; color: white;'>
+				<p style='margin-top: 25px; margin-bottom: 25px;'>
+					This is a demo using Microsoft's XML sample file "books.xml". <br><br>
+					URL: https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms762271(v=vs.85)
+					<br><br>
+					It uses JQuery's Ajax to show and hide the collection of books without reloading the web page.
+				</p>
+			</div>
+			<hr>
+			<button type='button' class='btn btn-primary' onclick='showCollection()'>Show</button>
+			<button type='button' class='btn btn-secondary' onclick='hideCollection()' id='hideBtn'>Hide</button>
+			<br><br>
+			<div>
+				<table id='collection' style='width: 100%' class='table table-hover'></table>
+			</div>
+		</div>
+	</body>
+	
+</html>
